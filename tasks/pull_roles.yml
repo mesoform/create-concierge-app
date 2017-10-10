@@ -1,0 +1,18 @@
+---
+# ToDo: uncomment once local changes have been commited and pushed
+#- block:
+#  - name: get image creation role
+#    git:
+#      repo: "https://gbmeuk@bitbucket.org/mesoform/create-concierge-image.git"
+#      dest: "{{ playbook_dir }}/create-concierge-image/"
+#  - name: get application tests role
+#    git:
+#      repo: "https://gbmeuk@bitbucket.org/mesoform/concierge-tests.git"
+#      dest: "{{ playbook_dir }}"
+
+#  tags:
+#    - system_tests
+#    - all_tests
+#    - integration_tests
+#    - build
+#    - configure

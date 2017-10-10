@@ -1,0 +1,13 @@
+---
+ - pause:
+     seconds: 60
+
+ - name: gathering test results from {{ app_name }}
+   command: /usr/local/bin/docker logs {{ app_name }}
+#   command: /usr/local/bin/docker-compose -f "{{ project_src }}"/docker-compose.yml logs
+   ignore_errors: yes
+   register: test_results
+
+ - debug:
+     var: test_results.stdout_lines
+...

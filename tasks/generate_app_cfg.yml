@@ -1,0 +1,33 @@
+---
+- block:
+  - name: create app config directory
+    file:
+      state: directory
+      path: "{{ docker_src }}/etc/{{ project_name }}"
+  - name: generating application config files
+    template:
+      src: "{{ item }}"
+      dest: "{{ docker_src }}/etc/{{ project_name }}/{{ item | basename | regex_replace('\\.j2','') }}"
+    with_fileglob:
+        - "{{ playbook_dir }}/templates/app/*.j2"
+
+  - name: generating default app orchestration files
+    template:
+      src: "{{ item }}"
+      dest: "{{ docker_src }}/etc/{{ item | basename | regex_replace('\\.j2','') }}"
+    with_fileglob:
+        - ../templates/orchestration/containerpilot.json.j2
+  - template:
+      src: "{{ item }}"
+      dest: "{{ playbook_dir }}/{{ item | basename | regex_replace('\\.j2','') }}"
+    with_fileglob:
+        - ../templates/orchestration/docker-compose.yml.j2
+
+  - name: generating custom app orchestration files
+    template:
+      src: "{{ item }}"
+      dest: "{{ custom_orchestration_dir }}/{{ item | basename | regex_replace('\\.j2','') }}"
+    with_fileglob:
+        - "{{ playbook_dir }}/templates/orchestration/*.j2"
+  tags:
+    - configure

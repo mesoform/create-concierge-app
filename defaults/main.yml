@@ -1,0 +1,3 @@
+---
+  ansible_home: /etc/ansible
+  custom_orchestration_dir: "{{ docker_src }}"
