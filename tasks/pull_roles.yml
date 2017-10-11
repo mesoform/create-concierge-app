@@ -4,6 +4,7 @@
     git:
       repo: "https://gbmeuk@bitbucket.org/mesoform/create-concierge-app.git"
       dest: "{{ playbook_dir }}/create-concierge-app/"
+      force: yes
   - name: get image creation role
     git:
       repo: "https://gbmeuk@bitbucket.org/mesoform/create-concierge-image.git"
