@@ -16,12 +16,12 @@
       src: "{{ item }}"
       dest: "{{ docker_src }}/etc/{{ item | basename | regex_replace('\\.j2','') }}"
     with_fileglob:
-        - ../templates/orchestration/containerpilot.json.j2
+        - "{{ playbook_dir }}/create-concierge-app/templates/orchestration/containerpilot.json.j2"
   - template:
       src: "{{ item }}"
       dest: "{{ playbook_dir }}/{{ item | basename | regex_replace('\\.j2','') }}"
     with_fileglob:
-        - ../templates/orchestration/docker-compose.yml.j2
+        - "{{ playbook_dir }}/create-concierge-app/templates/orchestration/docker-compose.yml.j2"
 
   - name: generating custom app orchestration files
     template:
