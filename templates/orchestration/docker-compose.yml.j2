@@ -26,7 +26,7 @@ services:
 {% endif %}
 {% if envs is defined %}
     environment:
-{% for env in envs %}
+{% for env in env_vars %}
       - {{ env }}
 {% endfor %}
 {% endif %}
