@@ -24,7 +24,7 @@ services:
       - {{ port }}
 {% endfor %}
 {% endif %}
-{% if envs is defined %}
+{% if env_vars is defined %}
     environment:
 {% for env in env_vars %}
       - {{ env }}
