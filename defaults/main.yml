@@ -1,2 +1,2 @@
 ---
-  custom_orchestration_dir: "{{ docker_src }}"
+  default_custom_orchestration_dir: "{{ docker_src }}/etc"
