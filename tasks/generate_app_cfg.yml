@@ -16,7 +16,7 @@
       src: "{{ item }}"
       dest: "{{ docker_src }}/etc/{{ item | basename | regex_replace('\\.j2','') }}"
     with_fileglob:
-        - "{{ playbook_dir }}/create-concierge-app/templates/orchestration/containerpilot.json.j2"
+        - "{{ playbook_dir }}/create-concierge-app/templates/orchestration/containerpilot.json5.j2"
         
   - name: generate default docker-compose.yml
     template:
