@@ -1,0 +1,130 @@
+{
+  consul: {% raw %}'{{ if .CONSUL_AGENT }}localhost{{ else }}{{ .CONSUL | default "consul"}}{{ end }}:8500'{% endraw %},
+  logging: {
+    level: {% raw %}'{{ .LOG_LEVEL | default "DEBUG" }}'{% endraw %},
+    format: {% raw %}'{{ .LOG_FORMAT | default "default" }}'{% endraw %}
+  },
+  jobs: [
+    {
+      name: "triton_dns_fix",
+      exec: "/usr/local/bin/setdomain.sh"
+    },
+{% if pre_start is defined %}
+    {
+      name: "pre_start",
+      exec: '{{ pre_start }}',
+      when: {
+        source: "triton_dns_fix",
+        once: "exitSuccess"
+      }
+    },
+{% endif %}
+    {
+      name: '{{ project_name }}',
+      exec: [
+        "{{ command }}"
+      ],
+{% if service_port is defined %}
+      port: "{{ service_port }}",
+{% endif %}
+      health: {
+        exec: '{{ healthcheck }}',
+{% if healthcheck_interval is defined %}
+        interval: "{{ healthcheck_interval }}",
+{% endif %}
+{% if healthcheck_ttl is defined %}
+        ttl: "{{ healthcheck_ttl }}",
+{% endif %}
+{% if healthcheck_timeout is defined %}
+        timeout: "{{ healthcheck_timeout }}",
+{% endif %}
+      },
+      tags: [
+{% for tag in service_tags %}
+{% if not loop.last %}
+        "{{ tag }}",
+{% else %}
+        "{{ tag }}"
+{% endif %}
+{% endfor %}
+      ],
+      {% raw %}{{ if .CONSUL_AGENT }}when: {
+        source: "consul_agent",
+        once: "healthy"
+      }{{ end }}{% endraw %}
+    },
+    {
+      name: "scheduling_status_healthy",
+      restarts: "unlimited",
+      exec: ["zabbix_sender",
+        "-c", "/etc/coprocesses/zabbix/zabbix_agentd.conf",
+        "--key", "container.state",
+        "--value", "1"],
+      when: {
+        interval: "10s",
+      }
+    },
+/*  ToDo: sending state=0 when main service is unhealthy
+    Leaving this line in for now but feel that this will conflict when trying
+    to scale containers. I.e. a process being unhealthy but container still
+    running will mean docker scale will be using incorrect deployment.state value
+    {
+      name: "scheduling_status_unhealthy",
+      restarts: "unlimited",
+      exec: ["zabbix_sender",
+        "-c", "/etc/coprocesses/zabbix/zabbix_agentd.conf",
+        "--key", "container.state",
+        "--value", "0"],
+      when: {
+        source: "{{ project_name }}",
+        once: "unhealthy",
+        interval: "10s",
+        timeout: "3s"
+      }
+    },     */
+    {
+      name: "zabbix_agent",
+      exec: ["/usr/sbin/zabbix_agentd", "-fc", "/etc/coprocesses/zabbix/zabbix_agentd.conf"],
+      restarts: "unlimited",
+      health: {
+        exec: 'zabbix_agentd -t agent.ping',
+        interval: 30,
+        ttl: 60,
+        timeout: 5
+      },
+      when: {
+        source: "pre_start",
+        once: "exitSuccess"
+      }
+    },
+    {
+      name: "post_stop",
+      exec: ["zabbix_sender",
+             "-c", "/etc/coprocesses/zabbix/zabbix_agentd.conf",
+             "--key", "container.state",
+             "--value", "0"],
+      when: {
+        once: "shutdown"
+      }
+    },
+{% raw %}{{ if .CONSUL_AGENT }}{
+      name: "consul_agent",
+      restarts: "unlimited",
+      exec: [
+        "/usr/local/bin/consul", "agent",
+        "-data-dir=/data",
+        "-config-dir=/config"
+      ],
+      health: {
+        exec: 'consul join {{ .CONSUL | default "consul"}}',
+        interval: 5,
+        ttl: 10
+      },
+      when: {
+        source: "pre_start",
+        once: "exitSuccess"
+      }
+    }{{ end }}
+{% endraw %}
+  ]
+}
