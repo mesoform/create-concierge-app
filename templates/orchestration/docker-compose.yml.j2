@@ -26,6 +26,8 @@ services:
 {% endif %}
 {% if env_vars is defined %}
     environment:
+      - ZABBIX_SERVER={{ event_management }}
+      - SVC_DISCOVERY={{ svc_discovery }}
 {% for env in env_vars %}
       - {{ env }}
 {% endfor %}

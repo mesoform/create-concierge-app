@@ -1,5 +1,5 @@
 {
-  consul: {% raw %}'{{ if .CONSUL_AGENT }}localhost{{ else }}{{ .CONSUL | default "consul"}}{{ end }}:8500'{% endraw %},
+  consul: {% raw %}'{{ if .CONSUL_AGENT }}localhost{{ else }}{{ .SVC_DISCOVERY | default "consul"}}{{ end }}:8500'{% endraw %},
   logging: {
     level: {% raw %}'{{ .LOG_LEVEL | default "DEBUG" }}'{% endraw %},
     format: {% raw %}'{{ .LOG_FORMAT | default "default" }}'{% endraw %}
@@ -116,7 +116,7 @@
         "-config-dir=/config"
       ],
       health: {
-        exec: 'consul join {{ .CONSUL | default "consul"}}',
+        exec: 'consul join {{ .SVC_DISCOVERY | default "consul"}}',
         interval: 5,
         ttl: 10
       },
