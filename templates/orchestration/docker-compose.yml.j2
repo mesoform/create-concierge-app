@@ -3,7 +3,7 @@ version: '2'
 
 services:
   server:
-    image: "{{ img_name }}:{{ img_ver }}"
+    image: "{{ img_name }}"
     domainname: "{{ dns_domain }}"
 {% if labels is defined %}
 {% for label in labels %}
