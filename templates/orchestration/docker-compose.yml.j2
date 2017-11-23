@@ -11,9 +11,9 @@ services:
       - {{ label }}
 {% endfor %}
 {% endif %}
-    restart: always
-    mem_limit: {{ resources }}
-    network_mode: {{ net_mode }}
+    restart: {{ restart | default(default_restart) }}
+    mem_limit: {{ memory | default(default_memory) }}
+    network_mode: {{ net_mode | default(default_net_mode) }}
 {% if dns is defined %}
     dns: {{ dns }}
 {% endif %}
