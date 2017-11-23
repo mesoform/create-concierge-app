@@ -1,8 +1,8 @@
 {
   consul: {% raw %}'{{ if .CONSUL_AGENT }}localhost{{ else }}{{ .SVC_DISCOVERY | default "consul"}}{{ end }}:8500'{% endraw %},
   logging: {
-    level: {% raw %}'{{ .LOG_LEVEL | default "INFO" }}'{% endraw %},
-    format: {% raw %}'{{ .LOG_FORMAT | default "default" }}'{% endraw %}
+    level: {% raw %}'{{ .LOG_LEVEL }}'{% endraw %},
+    format: {% raw %}'{{ .LOG_FORMAT }}'{% endraw %}
   },
   jobs: [
     {
