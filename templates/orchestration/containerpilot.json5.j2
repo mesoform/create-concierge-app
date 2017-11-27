@@ -1,6 +1,6 @@
 {
 {% if svc_discovery is defined %}
-  consul: localhost,
+  consul: 'localhost',
 {% endif %}
   logging: {
     level: {% raw %}'{{ .LOG_LEVEL }}'{% endraw %},
