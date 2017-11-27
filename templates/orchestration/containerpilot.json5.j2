@@ -101,7 +101,7 @@
         once: "shutdown"
       }
     },
-{% raw %}{{ if .CONSUL_AGENT }}{
+{% raw %}{{ if .CONSUL_AGENT }}{% endraw %}{
       name: "consul_agent",
       restarts: "unlimited",
       exec: [
@@ -110,7 +110,7 @@
         "-config-dir=/config"
       ],
       health: {
-        exec: 'consul join {{ .SVC_DISCOVERY | default "consul"}}',
+        exec: 'consul join {% raw %}{{ .SVC_DISCOVERY | default "consul"}}{% endraw %}',
         interval: 5,
         ttl: 10
       },
@@ -125,7 +125,6 @@
         once: "exitSuccess"
       }
 {% endif %}
-    }{{ end }}
-{% endraw %}
+    }{% raw %}{{ end }}{% endraw %}
   ]
 }
