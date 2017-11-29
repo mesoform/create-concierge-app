@@ -20,8 +20,11 @@ services:
     command: {{ command }}
 {% if ports is defined %}
     ports:
+{% if service_port is defined %}
+      - {{ service_port | lower }}
+{% endif %}
 {% for port in ports %}
-      - {{ port }}
+      - {{ port | lower }}
 {% endfor %}
 {% endif %}
 {% if env_vars is defined %}
