@@ -1,2 +1,5 @@
 ---
-  default_custom_orchestration_dir: "{{ docker_src }}/etc"
+default_memory: 128m
+default_net_mode: bridge
+default_restart: always
+default_custom_orchestration_dir: "{{ docker_src }}/etc"

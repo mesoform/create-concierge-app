@@ -3,7 +3,7 @@ version: '2.1'
 
 services:
   server:
-    image: "{{ img_name }}:{{ img_ver }}"
+    image: "{{ img_name }}"
     domainname: "{{ dns_domain }}"
 {% if labels is defined %}
 {% for label in labels %}
@@ -11,23 +11,30 @@ services:
       - {{ label }}
 {% endfor %}
 {% endif %}
-    restart: always
-    mem_limit: {{ resources }}
-    network_mode: {{ net_mode }}
+    restart: {{ restart | default(default_restart) }}
+    mem_limit: {{ memory | default(default_memory) }}
+    network_mode: {{ net_mode | default(default_net_mode) }}
 {% if dns is defined %}
     dns: {{ dns }}
 {% endif %}
     command: {{ command }}
 {% if ports is defined %}
     ports:
+{% if service_port is defined %}
+      - {{ service_port | lower }}
+{% endif %}
 {% for port in ports %}
-      - {{ port }}
+      - {{ port | lower }}
 {% endfor %}
 {% endif %}
 {% if env_vars is defined %}
     environment:
+{% if event_management is defined %}
       - ZABBIX_SERVER={{ event_management }}
+{% endif %}
+{% if svc_discovery is defined %}
       - SVC_DISCOVERY={{ svc_discovery }}
+{% endif %}
 {% for env in env_vars %}
       - {{ env }}
 {% endfor %}
