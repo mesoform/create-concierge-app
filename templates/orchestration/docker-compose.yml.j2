@@ -16,6 +16,10 @@ services:
 {% if network_mode is defined %}
     network_mode: {{ network_mode | default(default_network_mode) }}
 {% endif %}
+{% if svc_discovery is defined %}
+    depends_on:
+      - consul
+{% endif %}
 {% if dns is defined %}
     dns: {{ dns }}
 {% endif %}
