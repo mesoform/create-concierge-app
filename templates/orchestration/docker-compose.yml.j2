@@ -2,7 +2,7 @@
 version: '2.1'
 
 services:
-  server:
+  app:
     image: "{{ img_name }}"
     domainname: "{{ dns_domain }}"
 {% if labels is defined %}
