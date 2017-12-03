@@ -46,7 +46,7 @@ services:
       - ZABBIX_SERVER={{ event_management }}
 {% endif %}
 {% if svc_discovery is defined %}
-      - SVC_DISCOVERY={{ svc_discovery }}
+      - SVC_DISCOVERY={{ svc_discovery }}:8301
 {% endif %}
 {% for env in env_vars %}
       - {{ env }}
