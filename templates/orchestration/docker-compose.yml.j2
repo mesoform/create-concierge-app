@@ -6,8 +6,9 @@ services:
     image: "{{ img_name }}"
     domainname: "{{ dns_domain }}"
 {% if labels is defined %}
-{% for label in labels %}
     labels:
+      - triton.cns.services={{ project_name }}
+{% for label in labels %}
       - {{ label }}
 {% endfor %}
 {% endif %}
