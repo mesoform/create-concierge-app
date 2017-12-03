@@ -38,6 +38,9 @@ services:
 {% if service_port is defined %}
       - {{ service_port | lower }}
 {% endif %}
+{% if event_management is defined %}
+      - 10050
+{% endif %}
 {% for port in ports %}
       - {{ port | lower }}
 {% endfor %}
