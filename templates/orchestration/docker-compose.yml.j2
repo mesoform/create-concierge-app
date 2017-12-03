@@ -15,6 +15,11 @@ services:
     mem_limit: {{ memory | default(default_memory) }}
 {% if network_mode is defined %}
     network_mode: {{ network_mode | default(default_network_mode) }}
+{% else %}
+    ## For Triton bridge mode needs explicitly setting because the docker compose client
+    ## sends network_mode=default by default. The uncommenting of this line is handled
+    ## in the Ansible code but can obviously be uncommented personally for manual interaction
+    # network_mode: bridge
 {% endif %}
 {% if svc_discovery is defined %}
     depends_on:
