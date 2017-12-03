@@ -8,9 +8,9 @@ services:
     dns_search:
       - {{ dns_domain }}
       - {{ oaas_domain }}
-{% if labels is defined %}
     labels:
       - triton.cns.services={{ project_name }}
+{% if labels is defined %}
 {% for label in labels %}
       - {{ label }}
 {% endfor %}
