@@ -5,7 +5,9 @@ services:
   app:
     image: "{{ img_name }}"
     domainname: "{{ dns_domain }}"
-    dns_search: "{{ dns_domain }} {{ oaas_domain }}"
+    dns_search:
+      - {{ dns_domain }}
+      - {{ oaas_domain }}
 {% if labels is defined %}
     labels:
       - triton.cns.services={{ project_name }}
