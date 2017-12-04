@@ -29,9 +29,9 @@
 {% endif %}
       health: {
         exec: '{{ healthcheck }}',
-        interval: "{{ healthcheck_interval | default(5) }}",
-        ttl: "{{ healthcheck_ttl | default(5) }}",
-        timeout: "{{ healthcheck_timeout | default(1) }}",
+        interval: "{{ healthcheck_interval | default(default_healthcheck_interval) }}",
+        ttl: "{{ healthcheck_ttl | default(default_healthcheck_ttl) }}",
+        timeout: "{{ healthcheck_timeout | default(default_healthcheck_timeout) }}"
       },
       tags: [
 {% for tag in service_tags %}
@@ -85,9 +85,9 @@
       restarts: "unlimited",
       health: {
         exec: 'zabbix_agentd -t agent.ping',
-        interval: 30,
-        ttl: 60,
-        timeout: 5
+        interval: "{{ healthcheck_interval | default(default_healthcheck_interval) }}",
+        ttl: "{{ healthcheck_ttl | default(default_healthcheck_ttl) }}",
+        timeout: "{{ healthcheck_timeout | default(default_healthcheck_timeout) }}"
       },
       when: {
         source: "pre_start",
