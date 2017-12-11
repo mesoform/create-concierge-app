@@ -35,7 +35,6 @@ services:
 {% if dns is defined %}
     dns: {{ dns }}
 {% endif %}
-    command: {{ command }}
 {% if ports is defined %}
     ports:
 {% if service_port is defined %}
@@ -60,3 +59,5 @@ services:
       - {{ env }}
 {% endfor %}
 {% endif %}
+    ## uncomment to test your application start without containerpilot
+    #entrypoint: {{ command }}
