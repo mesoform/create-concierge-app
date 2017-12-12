@@ -10,64 +10,62 @@ http://www.mesoform.com/blog-listing/info/the-concierge-paradigm
   },
   jobs: [
     {
-      name: "platform-integration-setup",
-      exec: "/usr/local/bin/platform_integration_setup.sh"
+      name: 'platform-integration-setup',
+      exec: '/usr/local/bin/platform_integration_setup.sh'
     },
 {% if pre_start is defined %}
     {
-      name: "pre-start",
+      name: 'pre-start',
       exec: '{{ pre_start }}',
       when: {
-        source: "platform-integration-setup",
-        once: "exitSuccess"
+        source: 'platform-integration-setup',
+        once: 'exitSuccess'
       }
     },
 {% endif %}
     {
       name: '{{ project_name }}',
-      exec: [
-        "{{ command }}"
-      ],
+      exec: '{{ command }}',
 {% if service_port is defined %}
-      port: "{{ service_port }}",
+      port: '{{ service_port }}',
 {% endif %}
       health: {
         exec: '{{ healthcheck }}',
-        interval: "{{ healthcheck_interval | default(default_healthcheck_interval) }}",
-        ttl: "{{ healthcheck_ttl | default(default_healthcheck_ttl) }}",
-        timeout: "{{ healthcheck_timeout | default(default_healthcheck_timeout) }}",
+        interval: '{{ healthcheck_interval | default(default_healthcheck_interval) }}',
+        ttl: '{{ healthcheck_ttl | default(default_healthcheck_ttl) }}',
+        timeout: '{{ healthcheck_timeout | default(default_healthcheck_timeout) }}',
       },
       tags: [
 {% for tag in service_tags %}
 {% if not loop.last %}
-        "{{ tag }}",
+        '{{ tag }}',
 {% else %}
-        "{{ tag }}"
+        '{{ tag }}'
 {% endif %}
 {% endfor %}
       ],
 {% if pre_start is defined %}
       when: {
-        source: "pre-start",
-        once: "exitSuccess"
+        source: 'pre-start',
+        once: 'exitSuccess'
       }
 {% else %}
       when: {
-        source: "platform-integration-setup",
-        once: "exitSuccess"
+        source: 'platform-integration-setup',
+        once: 'exitSuccess'
       }
 {% endif %}
     },
 {% if event_management is defined %}
     {
-      name: "scheduling-status-healthy",
-      restarts: "unlimited",
-      exec: ["zabbix_sender",
-        "-c", "/etc/coprocesses/zabbix/zabbix_agentd.conf",
-        "--key", "container.state",
-        "--value", "1"],
+      name: 'scheduling-status-healthy',
+      restarts: 'unlimited',
+      exec: ['zabbix_sender',
+        '-c', '/etc/coprocesses/zabbix/zabbix_agentd.conf',
+        '--key', 'container.state',
+        '--value', '1'],
       when: {
-        interval: "10s",
+        interval: '10s',
       }
     },
 /*  ToDo: sending state=0 when main service is unhealthy
@@ -75,23 +73,23 @@ http://www.mesoform.com/blog-listing/info/the-concierge-paradigm
     to scale containers. I.e. a process being unhealthy but container still
     running will mean docker scale will be using incorrect deployment.state value
     {
-      name: "scheduling_status_unhealthy",
-      restarts: "unlimited",
-      exec: ["zabbix_sender",
-        "-c", "/etc/coprocesses/zabbix/zabbix_agentd.conf",
-        "--key", "container.state",
-        "--value", "0"],
+      name: 'scheduling_status_unhealthy',
+      restarts: 'unlimited',
+      exec: ['zabbix_sender',
+        '-c', '/etc/coprocesses/zabbix/zabbix_agentd.conf',
+        '--key', 'container.state',
+        '--value', '0'],
       when: {
-        source: "{{ project_name }}",
-        once: "unhealthy",
-        interval: "10s",
-        timeout: "3s"
+        source: '{{ project_name }}',
+        once: 'unhealthy',
+        interval: '10s',
+        timeout: '3s'
       }
     },     */
     {
       name: 'zabbix-agent',
-      exec: ["/usr/sbin/zabbix_agentd", "-fc", "/etc/coprocesses/zabbix/zabbix_agentd.conf"],
-      restarts: "unlimited",
+      exec: ['/usr/sbin/zabbix_agentd', '-fc', '/etc/coprocesses/zabbix/zabbix_agentd.conf'],
+      restarts: 'unlimited',
       health: {
         exec: 'zabbix_agentd -t agent.ping',
         interval: 30,
@@ -100,63 +98,63 @@ http://www.mesoform.com/blog-listing/info/the-concierge-paradigm
       },
 {% if pre_start is defined %}
       when: {
-        source: "pre-start",
-        once: "exitSuccess"
+        source: 'pre-start',
+        once: 'exitSuccess'
       }
 {% else %}
       when: {
-        source: "platform-integration-setup",
-        once: "exitSuccess"
+        source: 'platform-integration-setup',
+        once: 'exitSuccess'
       }
 {% endif %}
     },
     {
-      name: "post-stop",
-      exec: ["zabbix_sender",
-             "-c", "/etc/coprocesses/zabbix/zabbix_agentd.conf",
-             "--key", "container.state",
-             "--value", "0"],
+      name: 'post-stop',
+      exec: ['zabbix_sender',
+             '-c', '/etc/coprocesses/zabbix/zabbix_agentd.conf',
+             '--key', 'container.state',
+             '--value', '0'],
       when: {
-        once: "shutdown"
+        once: 'shutdown'
       }
     },
 {% endif %}
     {
-      name: "consul-agent",
-      restarts: "unlimited",
+      name: 'consul-agent',
+      restarts: 'unlimited',
 {% if svc_discovery is defined %}
       exec: [
-        "/usr/local/bin/consul", "agent",
-        "-config-dir=/config",
-        "-data-dir=/tmp",
-        "-rejoin",
-        "-retry-join", "{% raw %}{{ .SVC_DISCOVERY }}{% endraw %}",
-        "-retry-max", "10",
-        "-retry-interval", "10s"
+        '/usr/local/bin/consul', 'agent',
+        '-config-dir=/config',
+        '-data-dir=/tmp',
+        '-rejoin',
+        '-retry-join', '{% raw %}{{ .SVC_DISCOVERY }}{% endraw %}',
+        '-retry-max', '10',
+        '-retry-interval', '10s'
       ],
 {% else %}
       exec: [
-        "/usr/local/bin/consul", "agent",
-        "-server",
-        "-dev",
-        "-join", "localhost"
+        '/usr/local/bin/consul', 'agent',
+        '-server',
+        '-dev',
+        '-join', 'localhost'
       ],
 {% endif %}
 /*      health: {
-        exec: "consul join {% raw %}{{ .SVC_DISCOVERY }}{% endraw %}",
+        exec: 'consul join {% raw %}{{ .SVC_DISCOVERY }}{% endraw %}',
         interval: 5,
         ttl: 10
       },
 */
 {% if pre_start is defined %}
       when: {
-        source: "pre-start",
-        once: "exitSuccess"
+        source: 'pre-start',
+        once: 'exitSuccess'
       }
 {% else %}
       when: {
-        source: "platform-integration-setup",
-        once: "exitSuccess"
+        source: 'platform-integration-setup',
+        once: 'exitSuccess'
       }
 {% endif %}
     }
