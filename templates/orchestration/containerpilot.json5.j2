@@ -126,6 +126,7 @@ http://www.mesoform.com/blog-listing/info/the-concierge-paradigm
       exec: [
         '/usr/local/bin/consul', 'agent',
         '-config-dir=/config',
+        '-disable-host-node-id',
         '-data-dir=/tmp',
         '-rejoin',
         '-retry-join', '{% raw %}{{ .SVC_DISCOVERY }}{% endraw %}',
