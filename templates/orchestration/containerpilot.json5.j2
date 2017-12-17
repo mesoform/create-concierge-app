@@ -26,6 +26,7 @@ http://www.mesoform.com/blog-listing/info/the-concierge-paradigm
     {
       name: '{{ project_name }}',
       exec: '{{ command }}',
+      restarts: '{{ app_restarts | default(default_app_restarts) }}',
 {% if service_port is defined %}
       port: '{{ service_port }}',
 {% endif %}
@@ -59,7 +60,7 @@ http://www.mesoform.com/blog-listing/info/the-concierge-paradigm
 {% if event_management is defined %}
     {
       name: 'scheduling-status-healthy',
-      restarts: 'unlimited',
+      restarts: '{{ coprocess_restarts | default(default_coprocess_restarts) }}',
       exec: ['zabbix_sender',
         '-c', '/etc/coprocesses/zabbix/zabbix_agentd.conf',
         '--key', 'container.state',
@@ -74,7 +75,7 @@ http://www.mesoform.com/blog-listing/info/the-concierge-paradigm
     running will mean docker scale will be using incorrect deployment.state value
     {
       name: 'scheduling_status_unhealthy',
-      restarts: 'unlimited',
+      restarts: '{{ coprocess_restarts | default(default_coprocess_restarts) }}',
       exec: ['zabbix_sender',
         '-c', '/etc/coprocesses/zabbix/zabbix_agentd.conf',
         '--key', 'container.state',
@@ -89,7 +90,7 @@ http://www.mesoform.com/blog-listing/info/the-concierge-paradigm
     {
       name: 'zabbix-agent',
       exec: ['/usr/sbin/zabbix_agentd', '-fc', '/etc/coprocesses/zabbix/zabbix_agentd.conf'],
-      restarts: 'unlimited',
+      restarts: '{{ coprocess_restarts | default(default_coprocess_restarts) }}',
       health: {
         exec: 'zabbix_agentd -t agent.ping',
         interval: 30,
@@ -121,7 +122,7 @@ http://www.mesoform.com/blog-listing/info/the-concierge-paradigm
 {% endif %}
     {
       name: 'consul-agent',
-      restarts: 'unlimited',
+      restarts: '{{ coprocess_restarts | default(default_coprocess_restarts) }}',
 {% if svc_discovery is defined %}
       exec: [
         '/usr/local/bin/consul', 'agent',

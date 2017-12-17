@@ -1,7 +1,9 @@
 ---
 default_memory: 128m
 default_network_mode: bridge
-default_restart: always
+default_container_restarts: always
+default_coprocess_restarts: unlimited
+default_app_restarts: 3
 default_custom_orchestration_dir: "{{ docker_src }}/etc"
 default_healthcheck_interval: 5
 default_healthcheck_ttl: 30

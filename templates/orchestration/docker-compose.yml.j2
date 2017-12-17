@@ -18,7 +18,7 @@ services:
       - {{ label }}
 {% endfor %}
 {% endif %}
-    restart: {{ restart | default(default_restart) }}
+    restart: {{ restart | default(default_container_restarts) }}
     mem_limit: {{ memory | default(default_memory) }}
 {% if network_mode is defined %}
     network_mode: {{ network_mode | default(default_network_mode) }}
