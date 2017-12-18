@@ -60,13 +60,13 @@ http://www.mesoform.com/blog-listing/info/the-concierge-paradigm
 {% if event_management is defined %}
     {
       name: 'scheduling-status-healthy',
-      restarts: '{{ coprocess_restarts | default(default_coprocess_restarts) }}',
       exec: ['zabbix_sender',
         '-c', '/etc/coprocesses/zabbix/zabbix_agentd.conf',
         '--key', 'container.state',
         '--value', '1'],
       when: {
-        interval: '10s',
+        source: '{{ project_name }}',
+        each: 'healthy'
       }
     },
 /*  ToDo: sending state=0 when main service is unhealthy
@@ -75,16 +75,13 @@ http://www.mesoform.com/blog-listing/info/the-concierge-paradigm
     running will mean docker scale will be using incorrect deployment.state value
     {
       name: 'scheduling_status_unhealthy',
-      restarts: '{{ coprocess_restarts | default(default_coprocess_restarts) }}',
       exec: ['zabbix_sender',
         '-c', '/etc/coprocesses/zabbix/zabbix_agentd.conf',
         '--key', 'container.state',
         '--value', '0'],
       when: {
         source: '{{ project_name }}',
-        once: 'unhealthy',
-        interval: '10s',
-        timeout: '3s'
+        each: 'unhealthy'
       }
     },     */
     {
