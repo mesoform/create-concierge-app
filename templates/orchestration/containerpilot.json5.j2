@@ -11,7 +11,7 @@ http://www.mesoform.com/blog-listing/info/the-concierge-paradigm
   jobs: [
     {
       name: 'platform-integration-setup',
-      exec: '/usr/local/bin/platform_integration_setup.sh'
+      exec: '/usr/local/bin/platform_integration.sh setup'
     },
 {% if pre_start is defined %}
     {
@@ -126,9 +126,8 @@ http://www.mesoform.com/blog-listing/info/the-concierge-paradigm
 {% if svc_discovery is defined %}
       exec: [
         '/usr/local/bin/consul', 'agent',
-        '-config-dir=/config',
-        '-disable-host-node-id',
-        '-data-dir=/tmp',
+        '-config-dir=/etc/coprocesses/consul',
+        '-data-dir=/var/lib/consul',
         '-rejoin',
         '-retry-join', '{% raw %}{{ .SVC_DISCOVERY }}{% endraw %}',
         '-retry-max', '10',
