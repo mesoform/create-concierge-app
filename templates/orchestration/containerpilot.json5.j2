@@ -144,17 +144,6 @@ http://www.mesoform.com/blog-listing/info/the-concierge-paradigm
         ttl: 10
       },
 */
-{% if pre_start is defined %}
-      when: {
-        source: 'pre-start',
-        once: 'exitSuccess'
-      }
-{% else %}
-      when: {
-        source: 'platform-integration-setup',
-        once: 'exitSuccess'
-      }
-{% endif %}
     }
   ]
 }
