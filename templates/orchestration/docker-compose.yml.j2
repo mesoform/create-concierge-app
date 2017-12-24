@@ -35,7 +35,7 @@ services:
 {% if dns is defined %}
     dns: {{ dns }}
 {% endif %}
-{% if ports is defined %}
+{% if ports is defined or service_port is defined %}
     ports:
 {% if service_port is defined %}
       - {{ service_port | lower }}
@@ -43,9 +43,11 @@ services:
 {% if event_management is defined %}
       - 10050
 {% endif %}
+{% if ports is defined %}
 {% for port in ports %}
       - {{ port | lower }}
 {% endfor %}
+{% endif %}
 {% endif %}
 {% if env_vars is defined %}
     environment:
