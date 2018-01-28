@@ -76,24 +76,6 @@ http://www.mesoform.com/blog-listing/info/the-concierge-paradigm
         each: 'healthy'
       }
     },
-/*  ToDo: sending state=0 when main service is unhealthy
-    Leaving this line in for now but feel that this will conflict when trying
-    to scale containers. I.e. a process being unhealthy but container still
-    running will mean docker scale will be using incorrect deployment.state value
-    {
-      name: 'scheduling_status_unhealthy',
-      restarts: 'unlimited',
-      exec: ['zabbix_sender',
-        '-c', '/etc/coprocesses/zabbix/zabbix_agentd.conf',
-        '--key', 'container.state',
-        '--value', '0'],
-      when: {
-        source: '{{ project_name }}',
-        once: 'unhealthy',
-        interval: '10s',
-        timeout: '3s'
-      }
-    },     */
     {
       name: 'zabbix-agent',
       exec: ['/usr/sbin/zabbix_agentd',
