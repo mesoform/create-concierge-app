@@ -1,34 +1,23 @@
 ## Using this role
 
-Generally this role should be wrapped by a [top level playbook for generating application config](https://github.com/mesoform/configure-concierge-app) to be built into the image.
+Generally this role should be wrapped by a [top level playbook for generating application 
+config](https://github.com/mesoform/configure-concierge-app) to be built into the image. However, if ran manually, there is a 
+`concierge-app.yml` file which can be passed to `ansible-playbook` but many of the required variables and files will need to be set up
+ locally.
 
-If ran manually, there is a `concierge-app.yml` file which can be passed to `ansible-playbook` but many of the required variables and files will need to be set up locally.
+Primarily the role simply pulls all of your application variables and scripts together to be added to you container and provides a 
+`containerpilot.json5` orchestration file and a basic `docker-compose.yml` file. You can find the template which are used to do this 
+in the `templates/orchestration` directory and also an example template in `templates/app` if you wanted to process templates to 
+dynamically generate application config.
 
-Primarily the role simply pulls all of your application variables and scripts together to be added to you container and provides a containerpilot.json5 orchestration file and a basic docker-compose.yml file.
-
-There are a couple of templates in the templates/orchestration directory for doing which do this and an example template in templates/app.
-
-The docker file has some default attributes set and allows for others to be included by creating the required lists or variables.
-
-Currently these are as follows:
-
-`install_script` (string) = the location of the script required to install the application you want to package into the image
-
-`env_vars` (list) = a list of additional environment variables. E.g. `env_vars: FOO=bar`
-
-`build_args` (list) = a list of additional Docker ARG options for required variables when building
-
-`labels` (list) = a list of additional labels to add to the container 
-
-`ports` (list) =  a list of ports to expose
-
-`volumes` (list) = a list of volume the container should create
-
-`entrypoint` (string) = process or script to run as `ENTRYPOINT`. For the concierge containers, it is assumed that unless you're creating a base image, this will always be containerpilot and already set in the base image
-
-`command` (string) = process or script to run as CMD. For the concierge containers, it is assumed that generally this will be passed via orchestration files like docker-compose.yml
-
-Options like mem_limit are best added to compose files but other options may be added at a later date
+There are no required variables to run this as a stand alone playbook but have a look at the templates at all or the `if defined`
+variables to see which ones you may want to set using `ansible-playbook --extra-vars some_key=some_value`.
 
 ## Testing
-Add a test tag to the tasks you want to test and run `ansible-playbook -vv concierge-app.yml`
+Add a test tag to the tasks you want to test and run `ansible-playbook -vv concierge-app.yml -t test`
+
+However, because it's generally unlikely this role will be used on its own much, and because it is so easy, we recommend
+ [testing whilst integrated as a submodule](https://github.com/mesoform/concierge-app-playbook/blob/master/README.md#submodules)
+
+`-----------------------------------------------------------------------------------------------------------------`
+Template by [Mesoform Limited](http://www.mesoform.com)
