@@ -1,9 +1,10 @@
+# Role to create configuration for building a Concierge managed application 
+
 ## Using this role
 
 Generally this role should be wrapped by a [top level playbook for generating application 
-config](https://github.com/mesoform/configure-concierge-app) to be built into the image. However, if ran manually, there is a 
-`concierge-app.yml` file which can be passed to `ansible-playbook` but many of the required variables and files will need to be set up
- locally.
+config](https://github.com/mesoform/concierge-app-playbook) to be built into the image. However, if ran manually, there is a 
+`concierge-app.yml` file which can be passed to `ansible-playbook` but many of the required variables and files will need to be passed at runtime.
 
 Primarily the role simply pulls all of your application variables and scripts together to be added to you container and provides a 
 `containerpilot.json5` orchestration file and a basic `docker-compose.yml` file. You can find the template which are used to do this 

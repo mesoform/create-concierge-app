@@ -111,13 +111,13 @@ http://www.mesoform.com/blog-listing/info/the-concierge-paradigm
       restarts: 3,
 {% if service_port is defined %}
       port: '{{ service_port }}',
-{% endif %}
       health: {
         exec: '{{ healthcheck }}',
         interval: {{ healthcheck_interval | default(default_healthcheck_interval) }},
         ttl: {{ healthcheck_ttl | default(default_healthcheck_ttl) }},
         timeout: {{ healthcheck_timeout | default(default_healthcheck_timeout) }},
       },
+{% endif %}
       tags: [
 {% for tag in service_tags %}
 {% if not loop.last %}
@@ -127,10 +127,12 @@ http://www.mesoform.com/blog-listing/info/the-concierge-paradigm
 {% endif %}
 {% endfor %}
       ],
+{% if svc_discovery is defined %}
       consul: {
         enableTagOverride: true,
         deregisterCriticalServiceAfter: '10m'
       },
+{% endif %}
 {% if pre_start is defined %}
       when: {
         source: 'pre-start',
