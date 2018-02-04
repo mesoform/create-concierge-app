@@ -58,10 +58,12 @@ http://www.mesoform.com/blog-listing/info/the-concierge-paradigm
     {
       name: 'pre-start',
       exec: '{{ pre_start }}',
+{% if upstreams is defined %}
       when: {
         source: 'watch.{{ upstreams | last }}',
         once: 'healthy'
       }
+{% endif %}
     },
 {% endif %}
 {% if event_management is defined %}
