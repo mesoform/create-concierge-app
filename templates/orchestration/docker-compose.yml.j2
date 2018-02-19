@@ -52,10 +52,10 @@ services:
 {% if env_vars is defined %}
     environment:
 {% if event_management is defined %}
-      - EM_SERVER={{ event_management }}
+      - EM_SERVER={{ event_management_server | default(event_management) }}
 {% endif %}
 {% if svc_discovery is defined %}
-      - SVC_DISCOVERY={{ svc_discovery }}:8301
+      - SVC_DISCOVERY={{ svc_discovery_server | default(svc_discovery) }}:8301
 {% endif %}
 {% for env in env_vars %}
       - {{ env }}
