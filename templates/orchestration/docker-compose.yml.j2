@@ -27,6 +27,8 @@ services:
     ## sends network_mode=default by default. The uncommenting of this line is handled
     ## in the Ansible code but can obviously be uncommented personally for manual interaction
     # network_mode: bridge
+    # Triton also doesn't handle domain_name, so we fix this by adding a
+    # DNS_DOMAIN={{ dns_domain }} environment variable below
 {% endif %}
 {% if svc_discovery is defined %}
     depends_on:
