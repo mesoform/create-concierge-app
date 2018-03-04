@@ -103,7 +103,8 @@ http://www.mesoform.com/blog-listing/info/the-concierge-paradigm
              '--key', 'container.state',
              '--value', '0'],
       when: {
-        once: 'shutdown'
+        source: '{{ project_name }}',
+        once: 'stopped'
       }
     },
 {% endif %}
