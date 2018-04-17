@@ -4,6 +4,7 @@
     file:
       state: directory
       path: "{{ docker_src }}/{{ app_config_dir | default(default_app_config_dir) }}"
+
   - name: generating application config files
     template:
       src: "{{ item }}"
@@ -17,7 +18,7 @@
       dest: "{{ docker_src }}/etc/{{ item | basename | regex_replace('\\.j2','') }}"
     with_fileglob:
         - "{{ playbook_dir }}/create-concierge-app/templates/orchestration/containerpilot.json5.j2"
-        
+
   - name: generate default docker-compose.yml
     template:
       src: "{{ item }}"
@@ -31,5 +32,43 @@
       dest: "{{ custom_orchestration_dir | default(default_custom_orchestration_dir) }}/{{ item | basename | regex_replace('\\.j2','') }}"
     with_fileglob:
         - "{{ playbook_dir }}/templates/orchestration/*.j2"
+
+  tags:
+    - configure
+
+
+- name: search for user-defined template directories
+  find:
+    paths: templates/
+    file_type: directory
+    recurse: yes
+    use_regex: yes
+    patterns: '(?=.*)((?!(app|orchestration)))'
+  register: additional_template_dirs
+  tags:
+    - configure
+
+
+- block:
+  - name: create corresponding config directories to add to container
+    file:
+      state: directory
+      path: "{{ item.path | regex_replace('templates/','files/') }}"
+    with_items: "{{ additional_template_dirs.files }}"
+
+  - name: generate list of user-defined template search paths
+    set_fact:
+      user_template_search_paths: "\
+        {{ user_template_search_paths | default([]) }} + \
+        [ '{{ item.path }}/*.j2' ]"
+    with_items: "{{ additional_template_dirs.files }}"
+
+  - name: processing user supplied templates
+    template:
+      src: "{{ item }}"
+      dest: "{{ item | regex_replace('templates/','files/') | regex_replace('\\.j2','') }}"
+    with_fileglob: "{{ user_template_search_paths }}"
+
+  when: additional_template_dirs.matched > 0
   tags:
     - configure
