@@ -43,7 +43,7 @@
     file_type: directory
     recurse: yes
     use_regex: yes
-    patterns: '(?=.*)((?!(app|orchestration)))'
+    patterns: '(?=.*)((?!(app|orchestration|scripts)))'
   register: additional_template_dirs
   tags:
     - configure
