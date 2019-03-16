@@ -9,3 +9,4 @@ default_healthcheck_interval: 10
 default_healthcheck_ttl: 30
 default_healthcheck_timeout: 3
 default_app_config_dir: /etc/{{ project_name }}
+default_app_scripts_dir: /opt/{{ project_name }}

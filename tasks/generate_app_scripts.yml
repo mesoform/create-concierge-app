@@ -1,0 +1,14 @@
+---
+- block:
+  - name: create app scripts directory
+    file:
+      state: directory
+      path: "{{ docker_src }}/{{ app_scripts_dir | default(default_app_scripts_dir) }}"
+  - name: generating application scripts
+    template:
+      src: "{{ item }}"
+      dest: "{{ docker_src }}/{{ app_scripts_dir | default(default_app_scripts_dir) }}/{{ item | basename | regex_replace('\\.j2','') }}"
+    with_fileglob:
+        - "{{ playbook_dir }}/templates/scripts/*.j2"
+  tags:
+    - configure
