@@ -5,7 +5,7 @@
     file_type: file
     recurse: yes
     use_regex: yes
-    patterns: '*.j2'
+    patterns: '.*\.j2'
   register: user_defined_scripts
 
 - block:
