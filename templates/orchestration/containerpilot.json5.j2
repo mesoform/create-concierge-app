@@ -25,7 +25,8 @@ http://www.mesoform.com/blog-listing/info/the-concierge-paradigm
         '-rejoin',
         '-retry-join', '{% raw %}{{ .SVC_DISCOVERY }}{% endraw %}',
         '-retry-max', '10',
-        '-retry-interval', '10s'
+        '-retry-interval', '10s',
+        '-dns-port', '53'
       ],
 {% else %}
       exec: [
