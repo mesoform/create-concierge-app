@@ -26,8 +26,9 @@ http://www.mesoform.com/blog-listing/info/the-concierge-paradigm
         '-retry-join', '{% raw %}{{ .SVC_DISCOVERY }}{% endraw %}',
         '-retry-max', '10',
         '-retry-interval', '10s',
-        '-dns-port', '53'
-      ],
+        '-dns-port', '53'{% raw %}{{if .SVC_DISCOVERY_NET }},
+        '-bind', '{{"{{"}} GetPrivateInterfaces | include "network" "{{ .SVC_DISCOVERY_NET }}" | attr "address" {{"}}"}}'{{end}}
+      {% endraw -%}],
 {% else %}
       exec: [
         '/usr/local/bin/consul', 'agent',
