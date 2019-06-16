@@ -18,17 +18,7 @@ http://www.mesoform.com/blog-listing/info/the-concierge-paradigm
       restarts: 'unlimited',
       stopTimeout: '5s',
 {% if svc_discovery is defined %}
-      exec: [
-        '/usr/local/bin/consul', 'agent',
-        '-config-dir=/etc/coprocesses/consul',
-        '-data-dir=/var/lib/consul',
-        '-rejoin',
-        '-retry-join', '{% raw %}{{ .SVC_DISCOVERY }}{% endraw %}',
-        '-retry-max', '10',
-        '-retry-interval', '10s',
-        '-dns-port', '53'{% raw %}{{if .SVC_DISCOVERY_NET }},
-        '-bind', '{{"{{"}} GetPrivateInterfaces | include "network" "{{ .SVC_DISCOVERY_NET }}" | attr "address" {{"}}"}}'{{end}}
-      {% endraw -%}],
+      exec: ["/usr/local/bin/consul-agent.sh"],
 {% else %}
       exec: [
         '/usr/local/bin/consul', 'agent',
